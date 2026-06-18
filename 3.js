@@ -1,26 +1,37 @@
-/*write an express js script to define 1 json array having property name and age.
-sort this obj acording to age.
-if user request shorted names in URL then all name along with age should be printed.
-acording to descening order of age
-also display json obj in home page*/
-var express = require('express');
-var app = express();
-Student=[{Name:"abc",age:21},
-    {Name:"def",age:19},
-    {Name:"ghi",age:25}
-]
-app.get("/",(req,res)=>{
-    res.send(Student);
-    //if you use res.write() then you need you convert obj to string (json.stringify)
-    //then use res.end()
-})
-app.get("/sort",(req,res)=>{
-    res.set("content-type","text/html");
-    var des=Student.sort((a,b)=>b.age-a.age);
-    for (k of des){
-        res.write("<h2>"+k.Name+"="+k.age+"</h2>");
-    }res.send();//also use res.end()--> coz no argument in res.send()
-})
-app.listen(5057)
+// html file, name , email, check box for subcriptaion.
+// on login page welcome user and email id should be printed 
+// if user checked the subcriptaion then "THANK YOU" msg will be printed and
+// log out link will be display.
+// if user has not otains subcripation you can subcribe msg will be printed
+//  with subcribe link.
+// if user then he or she will be redirected to sub. and thenk you for sub.
+//  along with logout 
+// use the concept of middleware and http post method
 
+const express = require('express')
+const app = express()
+app.use(express.urlencoded({extended:true}))//for parse post method
+app.use(express.static(__dirname,{index:"3.html"}))
+app.post("/log",(req,res,next)=>{
+    res.set("content-type","text/html")
+    res.write("<h1> Welcome : "+ req.body.uname+"</h1>")
+    res.write("<h2>Your Email is: "+ req.body.Email+"</h2>")
+    next();
+})
+app.post("/log",(req,res)=>{
+    if(req.body.news=="on"){
+        res.write("THANK YOU <a href='/'>logout </a>")
+    }
+    else{
+        res.set("content-type","text/html")
+        res.write("YOU CAN SUBSCRIBE <a href='/subscribe'>SUBSCRIBE</a>")
+    }
+    res.send()
+})
+app.get("/subscribe",(req,res)=>{
+    res.set("content-type","text/html")
+    res.write("THANK YOU FOR SUBSCRIBE <a href='/'>LOGOUT </a>")
+res.send()
+})
+app.listen(5093)
 

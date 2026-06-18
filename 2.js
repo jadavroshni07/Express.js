@@ -1,17 +1,31 @@
-// Write express js script to request server to display json obj on browser
-var express = require('express');
-var app = express();
-Student={Name:"LJU",age:21}
-app.get("/",(req,res)=>{
-    // 1st method 
-    // res.write(JSON.stringify(Student))
-    //it's by default convert string and buffer only.... thats why we need to convert obj to string
-    // res.end();
+// create an html form that takes a number
+// on submition if input is empty then display "PLEASE ENTER A NUMBER" and 
+// if input is nan then display "INVALID INPUT".
+// 2. if a proper number then display "EVEN NO." if the no. is even
+// if a proper number then display "ODD NO." if the no. is odd
+// also provide a link to go back
+// use to file html and js
 
-    // 2nd method  overall method
-    // res.send(Student)
+const express = require('express')
+const app = express()
+app.use(express.urlencoded({extended:true}))//for parse post method
+app.use(express.static(__dirname,{index:"2.html"}))
+app.post("/check",(req,res)=>{
+    // res.set("content-type","text/html");
+    const num=req.body.num
+    if(!num){
+        res.send("PLEASE ENTER THE NO.")
+    }
+    if(isNaN(num)){
+        res.send("INVALID NO.")
+    }
+    const number = parseInt(num)
+    if(number%2==0){
+        res.send("Even no. <a href='/' Try Again </a>")
+    }
+    else{
+        res.send("Odd no. <a href='/' Try Again </a>")
+    }
+}).listen(3367)
 
-    // 3rd method only for json obj
-    res.json(Student)
-})
-app.listen(5004)
+
